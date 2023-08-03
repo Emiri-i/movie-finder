@@ -1,5 +1,6 @@
 header {
-  margin: 20px 0 80px 0;
+  width: 90%;
+  margin: 20px auto 80px auto;
   img {
     height: 50px;
     width: auto;
@@ -7,7 +8,7 @@ header {
   .header-wrapper {
     display: flex;
     text-align: center;
-    justify-content: space-around;
+    justify-content: space-between;
     .header-right {
       color: white;
       display: flex;
@@ -29,5 +30,12 @@ header {
         }
       }
     }
+  }
+}
+
+@media (max-width: 1100px) {
+  header {
+    width: 90%;
+    margin: 20px auto 80px auto;
   }
 }

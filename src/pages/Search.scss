@@ -1,0 +1,49 @@
+.search-content {
+  width: 90%;
+  margin: 0 auto;
+  .search-header {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    .search-page-title {
+      font-size: 1.5rem;
+    }
+    .search-page-input-wrapper {
+      position: relative;
+      .search-page-input {
+        font-size: 16px;
+        color: white;
+        border: solid 0.5px skyblue;
+        border-radius: 20px;
+        padding: 0 15px 0 40px;
+        height: 100%;
+        width: 120px;
+        outline: none;
+        background: none;
+      }
+    }
+    .search-page-input-wrapper::before {
+      display: inline-block;
+      position: absolute;
+      content: "";
+      width: 18px;
+      height: 18px;
+      background: url(../assets/searchicon.png);
+      top: 6px;
+      left: 15px;
+    }
+  }
+  .film-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1100px) {
+  .search-content {
+    width: 90%;
+    margin: 0 auto;
+  }
+}

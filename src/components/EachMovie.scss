@@ -1,0 +1,33 @@
+.each-film {
+  margin: 15px;
+  text-align: center;
+  width: 15vw;
+  .each-film-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    .film-title {
+      padding-right: 4px;
+      width: 70%;
+      text-align: start;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .red {
+      color: red;
+    }
+    .green {
+      color: green;
+    }
+  }
+  .film-release-date {
+    margin-top: 6px;
+    text-align: start;
+  }
+  img {
+    margin: 10px 0;
+    width: 15vw;
+    height: auto;
+    border-radius: 8px;
+  }
+}
