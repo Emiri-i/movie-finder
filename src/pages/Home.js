@@ -18,29 +18,26 @@ const Home = () => {
 
 
   const getPopularFilmData = async () => {
-    try {
-      const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
-      const data = await getFetchData(url);
-      console.log(data)
-      const updatedData = [];
+    const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
+    const data = await getFetchData(url);
+    console.log(data)
+    const updatedData = [];
 
-      for (const d of data.results) {
-        const detailDataUrl = "https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY;
-        const movieDetailData = await getFetchData(detailDataUrl);
-        // console.log(filmDetailData)
-        updatedData.push({
-          ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
-          vote_average: movieDetailData.vote_average, revenue: movieDetailData.revenue,
-          budget: movieDetailData.budget, profit: movieDetailData.revenue - movieDetailData.budget
-        })
-      }
-
-      // console.log(updatedData)
-      dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
-      setShownPopularFilmList(updatedData.slice(0, 4));
-    } catch (e) {
-      alert(e);
+    for (const d of data.results) {
+      const detailDataUrl = "https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY;
+      const movieDetailData = await getFetchData(detailDataUrl);
+      // console.log(filmDetailData)
+      updatedData.push({
+        ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
+        vote_average: movieDetailData.vote_average, revenue: movieDetailData.revenue,
+        budget: movieDetailData.budget, profit: movieDetailData.revenue - movieDetailData.budget
+      })
     }
+
+    // console.log(updatedData)
+    dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
+    setShownPopularFilmList(updatedData.slice(0, 4));
+
   }
 
   const changeShownFilm = (num) => {

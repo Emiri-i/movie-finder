@@ -19,22 +19,18 @@ const Detail = () => {
   }, [])
 
   const getMyRate = async () => {
-    try {
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
-        }
-      };
-      const url = 'https://api.themoviedb.org/3/account/' + process.env.REACT_APP_ACCOUNT_ID + '/rated/movies?language=en-US&page=1&sort_by=created_at.asc'
-      const data = await getFetchData(url, options);
-      const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
-      if (targetMovieData) {
-        setMyRate(Math.floor(targetMovieData.rating));
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
       }
-    } catch (e) {
-      alert(e);
+    };
+    const url = 'https://api.themoviedb.org/3/account/' + process.env.REACT_APP_ACCOUNT_ID + '/rated/movies?language=en-US&page=1&sort_by=created_at.asc'
+    const data = await getFetchData(url, options);
+    const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
+    if (targetMovieData) {
+      setMyRate(Math.floor(targetMovieData.rating));
     }
   }
   return (
