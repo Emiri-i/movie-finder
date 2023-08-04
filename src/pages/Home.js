@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setPopularFilmActions } from '../store/index';
 import "./Home.scss";
 import EachMovie from '../components/EachMovie';
+import Chart from '../components/Home/Chart';
+import { getFetchData } from '../global/util';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -14,24 +16,26 @@ const Home = () => {
   const [shownPopularFilmList, setShownPopularFilmList] = useState([]);
   const [filmNumberList, setFilmNumberList] = useState([0, 4]);
 
+
   const getPopularFilmData = async () => {
     try {
       const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
-      const res = await fetch(url);
-      const data = await res.json();
+      const data = await getFetchData(url);
       console.log(data)
       const updatedData = [];
+
       for (const d of data.results) {
-        const filmDetailData = await fetch("https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY).then(res => { return res.json() })
+        const detailDataUrl = "https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY;
+        const movieDetailData = await getFetchData(detailDataUrl);
         // console.log(filmDetailData)
         updatedData.push({
           ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
-          vote_average: filmDetailData.vote_average, revenue: filmDetailData.revenue,
-          budget: filmDetailData.budget, profit: filmDetailData.revenue - filmDetailData.budget
+          vote_average: movieDetailData.vote_average, revenue: movieDetailData.revenue,
+          budget: movieDetailData.budget, profit: movieDetailData.revenue - movieDetailData.budget
         })
       }
-      console.log(updatedData)
-      // console.log("shownPopularFilmList", shownPopularFilmList)
+
+      // console.log(updatedData)
       dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
       setShownPopularFilmList(updatedData.slice(0, 4));
     } catch (e) {
@@ -70,6 +74,7 @@ const Home = () => {
           <div>{filmNumberList}</div>
           <Link to="/search" className='film-ranking-link'>Voir tous les films</Link>
         </section>
+        <Chart />
       </main>
     </>
   )

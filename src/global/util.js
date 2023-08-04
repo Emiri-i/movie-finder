@@ -9,3 +9,17 @@ export const formatNumber = (number) => {
 export const getYear = (dt) => {
   return dt.substr(0, dt.indexOf("-"));
 }
+
+export const getFetchData = (url, options) => {
+  return new Promise(async (resolve) => {
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      // console.log("fetch", data)
+      resolve(data);
+    } catch (e) {
+      alert(e);
+      console.error(e);
+    }
+  })
+}

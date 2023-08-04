@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { formatNumber } from '../global/util';
 import "./Detail.scss";
+import { getFetchData } from '../global/util';
 
 const Detail = () => {
   const { state } = useLocation();
@@ -26,8 +27,8 @@ const Detail = () => {
           Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
         }
       };
-      const res = await fetch('https://api.themoviedb.org/3/account/20245533/rated/movies?language=en-US&page=1&sort_by=created_at.asc', options)
-      const data = await res.json()
+      const url = 'https://api.themoviedb.org/3/account/' + process.env.REACT_APP_ACCOUNT_ID + '/rated/movies?language=en-US&page=1&sort_by=created_at.asc'
+      const data = await getFetchData(url, options);
       const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
       if (targetMovieData) {
         setMyRate(Math.floor(targetMovieData.rating));
