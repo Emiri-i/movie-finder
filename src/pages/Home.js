@@ -18,14 +18,16 @@ const Home = () => {
     const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
     const res = await fetch(url);
     const data = await res.json();
+    console.log(data)
     const updatedData = [];
     for (const d of data.results) {
       const filmDetailData = await fetch("https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY).then(res => { return res.json() })
-      console.log(filmDetailData)
+      // console.log(filmDetailData)
       updatedData.push({
         // ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path, release_date: d.release_date.substr(0, d.release_date.indexOf("-")),
         ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
-        revenue: filmDetailData.revenue, budget: filmDetailData.budget, profit: filmDetailData.revenue - filmDetailData.budget
+        vote_average: filmDetailData.vote_average, revenue: filmDetailData.revenue,
+        budget: filmDetailData.budget, profit: filmDetailData.revenue - filmDetailData.budget
       })
     }
     console.log(updatedData)

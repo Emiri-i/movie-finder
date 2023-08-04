@@ -1,43 +1,70 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+// import { useParams } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
 import { formatNumber } from '../global/util';
 import "./Detail.scss";
 
 const Detail = () => {
-  const params = useParams();
-  const movieId = params.movieId;
   const { state } = useLocation();
-  // console.log(state.filmData)
+  const [publicRate, setPublicRate] = useState(0);
+  const [myRate, setMyRate] = useState(0);
   const movieAmountData = [
-    { label: "Budget", value: formatNumber(state.filmData.budget) + "$", className: "" },
-    { label: "Revenue", value: formatNumber(state.filmData.revenue) + "$", className: "" },
-    { label: "Recettes", value: formatNumber(state.filmData.profit) + "$", className: state.filmData.profit < 0 ? "red" : "green" },
+    { label: "Budget", value: formatNumber(state.movieData.budget) + "$", className: "" },
+    { label: "Revenue", value: formatNumber(state.movieData.revenue) + "$", className: "" },
+    { label: "Recettes", value: formatNumber(state.movieData.profit) + "$", className: state.movieData.profit < 0 ? "red" : "green" },
   ]
+  useEffect(() => {
+    setPublicRate(Math.floor(state.movieData.vote_average));
+    getMyRate();
+  }, [])
+
+  const getMyRate = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
+      }
+    };
+    const res = await fetch('https://api.themoviedb.org/3/account/20245533/rated/movies?language=en-US&page=1&sort_by=created_at.asc', options)
+    const data = await res.json()
+    const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
+    if (targetMovieData) {
+      setMyRate(Math.floor(targetMovieData.rating));
+    }
+  }
   return (
     <>
       <main className='detail-content'>
         <div className='detail-content-left'>
-          <img src={state.filmData.poster_path} alt="movie image" />
+          <img src={state.movieData.poster_path} alt="movie image" />
         </div>
         <div className='detail-content-right'>
-          <h1>{state.filmData.title}</h1>
+          <h1>{state.movieData.title}</h1>
           <div className='amount-info'>
             {movieAmountData.map(movie => (
-              <div className='amount-each'>
-                <h6>{movie.label}</h6>
+              <div className='amount-each' key={movie.label}>
+                <h5>{movie.label}</h5>
                 <h3 className={movie.className}>{movie.value}</h3>
               </div>
             ))}
-            {/* <h6>Budget</h6>
-              <h3>{formatNumber(state.filmData.revenue) + "$"}</h3> */}
-            {/* <h3>{formatNumber(state.filmData.budget) + "$"}</h3>
-            <h3 className={state.filmData.profit < 0 ? "red" : "green"}>{formatNumber(state.filmData.profit) + "$"}</h3> */}
+          </div>
+          <div className='overview-wrapper'>
+            <h4>Synopsis</h4>
+            <div className='overview'>{state.movieData.overview}</div>
+          </div>
+          <div className='rate-wrapper'>
+            <div className='public-rate'>
+              <h5>Communauté</h5>
+              <div><span className={`rate-${publicRate}`}></span></div>
+            </div>
+            <div className='my-rate'>
+              <h5>Ma note</h5>
+              <div><span className={myRate ? `rate-${myRate}` : ""}></span></div>
+            </div>
           </div>
         </div>
       </main>
-      {/* detail {movieId}
-      <div>{state.filmData.title}</div> */}
     </>
   )
 }

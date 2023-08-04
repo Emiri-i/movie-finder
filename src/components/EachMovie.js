@@ -9,7 +9,7 @@ const EachMovie = (props) => {
   return (
     <>
       <div className='each-film'>
-        <Link to={`/detail/${film.id}`} state={{ filmData: film }}>
+        <Link to={`/detail/${film.id}`} state={{ movieData: film }}>
           <img src={film.poster_path} alt="movie image" />
         </Link>
         <div className='each-film-title-wrapper'>
