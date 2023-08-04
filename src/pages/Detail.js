@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import { useParams } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
 import { formatNumber } from '../global/util';
 import "./Detail.scss";
@@ -19,18 +18,22 @@ const Detail = () => {
   }, [])
 
   const getMyRate = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMmVhZThmYWRjYjU0ZWVkODBjMWZhMjgyM2E0OTUwMSIsInN1YiI6IjY0Y2EyMmMzZGQ4M2ZhMDBjNTE3ZmU1YSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fJckGtzIJ1mZjYfVtbd0YJI5LSd5b8xBXnXzZYnec7c'
+        }
+      };
+      const res = await fetch('https://api.themoviedb.org/3/account/20245533/rated/movies?language=en-US&page=1&sort_by=created_at.asc', options)
+      const data = await res.json()
+      const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
+      if (targetMovieData) {
+        setMyRate(Math.floor(targetMovieData.rating));
       }
-    };
-    const res = await fetch('https://api.themoviedb.org/3/account/20245533/rated/movies?language=en-US&page=1&sort_by=created_at.asc', options)
-    const data = await res.json()
-    const targetMovieData = data.results.find((elem) => elem.id === state.movieData.id && elem.rating)
-    if (targetMovieData) {
-      setMyRate(Math.floor(targetMovieData.rating));
+    } catch (e) {
+      alert(e);
     }
   }
   return (

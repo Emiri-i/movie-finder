@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPopularFilmActions } from '../store/index';
 import "./Home.scss";
-// import { formatNumber } from '../global/util';
 import EachMovie from '../components/EachMovie';
 
 const Home = () => {
@@ -14,26 +13,30 @@ const Home = () => {
 
   const [shownPopularFilmList, setShownPopularFilmList] = useState([]);
   const [filmNumberList, setFilmNumberList] = useState([0, 4]);
+
   const getPopularFilmData = async () => {
-    const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(data)
-    const updatedData = [];
-    for (const d of data.results) {
-      const filmDetailData = await fetch("https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY).then(res => { return res.json() })
-      // console.log(filmDetailData)
-      updatedData.push({
-        // ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path, release_date: d.release_date.substr(0, d.release_date.indexOf("-")),
-        ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
-        vote_average: filmDetailData.vote_average, revenue: filmDetailData.revenue,
-        budget: filmDetailData.budget, profit: filmDetailData.revenue - filmDetailData.budget
-      })
+    try {
+      const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log(data)
+      const updatedData = [];
+      for (const d of data.results) {
+        const filmDetailData = await fetch("https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY).then(res => { return res.json() })
+        // console.log(filmDetailData)
+        updatedData.push({
+          ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
+          vote_average: filmDetailData.vote_average, revenue: filmDetailData.revenue,
+          budget: filmDetailData.budget, profit: filmDetailData.revenue - filmDetailData.budget
+        })
+      }
+      console.log(updatedData)
+      // console.log("shownPopularFilmList", shownPopularFilmList)
+      dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
+      setShownPopularFilmList(updatedData.slice(0, 4));
+    } catch (e) {
+      alert(e);
     }
-    console.log(updatedData)
-    // console.log("shownPopularFilmList", shownPopularFilmList)
-    dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
-    setShownPopularFilmList(updatedData.slice(0, 4));
   }
 
   const changeShownFilm = (num) => {
