@@ -1,0 +1,55 @@
+.chart {
+  margin-top: 8vh;
+  hr {
+    margin-bottom: 5vh;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title-left {
+      display: flex;
+      align-items: center;
+      h1 {
+        margin-right: 2vw;
+      }
+    }
+    .year-range-start,
+    .year-range-middle,
+    .year-range-end {
+      margin-left: 2vw;
+    }
+    .year-range-middle {
+      color: skyblue;
+    }
+    .select-wrapper,
+    .year-range-start,
+    .year-range-end {
+      position: relative;
+      &::before {
+        content: "▼";
+        position: absolute;
+        top: 5px;
+        left: 90px;
+        width: 50px;
+        height: 50px;
+        color: skyblue;
+      }
+    }
+    select {
+      width: 115px;
+      outline: none;
+      background: transparent;
+      border: solid skyblue 0.5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      color: skyblue;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+  }
+  .chart-content {
+    width: 100%;
+    height: 500px;
+  }
+}

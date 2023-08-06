@@ -20,7 +20,7 @@ const Home = () => {
   const getPopularFilmData = async () => {
     const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
     const data = await getFetchData(url);
-    console.log(data)
+    // console.log(data)
     const updatedData = [];
 
     for (const d of data.results) {
@@ -68,7 +68,6 @@ const Home = () => {
               <img src={rightArrow} alt="right arrow" />
             </button>
           </div>
-          <div>{filmNumberList}</div>
           <Link to="/search" className='film-ranking-link'>Voir tous les films</Link>
         </section>
         <Chart />
