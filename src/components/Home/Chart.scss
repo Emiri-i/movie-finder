@@ -30,14 +30,18 @@
         content: "▼";
         position: absolute;
         top: 5px;
-        left: 70px;
-        width: 50px;
-        height: 50px;
+        left: 80px;
         color: skyblue;
       }
     }
-    select {
-      width: 115px;
+    .select-wrapper {
+      &::before {
+        left: 120px !important;
+      }
+    }
+    .select {
+      width: 110px;
+      height: 100%;
       outline: none;
       background: transparent;
       border: solid skyblue 0.5px;
@@ -46,6 +50,9 @@
       color: skyblue;
       -webkit-appearance: none;
       appearance: none;
+      &.genre-select {
+        width: 150px !important;
+      }
     }
   }
   .chart-content {

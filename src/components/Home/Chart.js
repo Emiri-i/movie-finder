@@ -156,7 +156,7 @@ const Chart = () => {
         <div className='title-left'>
           <h1>Statistique par année</h1>
           <div className='year-range-start'>
-            <select value={chartSelectedYearRange[0]} onChange={(e) => { onChangeYearStart(e) }} >
+            <select className='select' value={chartSelectedYearRange[0]} onChange={(e) => { onChangeYearStart(e) }} >
               {
                 renderYearStartSelect()
               }
@@ -164,7 +164,7 @@ const Chart = () => {
           </div>
           <div className='year-range-middle'>à</div>
           <div className='year-range-end'>
-            <select value={chartSelectedYearRange[1]} onChange={(e) => { onChangeYearEnd(e) }}>
+            <select className='select' value={chartSelectedYearRange[1]} onChange={(e) => { onChangeYearEnd(e) }}>
               {
                 chartSelectedYearEndOptions
               }
@@ -172,7 +172,7 @@ const Chart = () => {
           </div>
         </div>
         <div className='select-wrapper'>
-          <select onChange={(e) => changeGenre(e)} defaultValue="All" name="genre" >
+          <select className='select genre-select' onChange={(e) => changeGenre(e)} defaultValue="All" name="genre" >
             {
               genreList.map((genre) => (
                 <option key={genre.id} value={genre.name}>{genre.name}</option>
