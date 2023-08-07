@@ -1,12 +1,12 @@
 import './App.scss';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
 import Error from './pages/Error';
 import Root from './pages/Root';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Root />,
