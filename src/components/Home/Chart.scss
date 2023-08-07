@@ -30,17 +30,17 @@
         content: "▼";
         position: absolute;
         top: 5px;
-        left: 80px;
+        left: 60px;
         color: skyblue;
       }
     }
     .select-wrapper {
       &::before {
-        left: 120px !important;
+        left: 110px !important;
       }
     }
     .select {
-      width: 110px;
+      width: 90px;
       height: 100%;
       outline: none;
       background: transparent;
@@ -51,7 +51,7 @@
       -webkit-appearance: none;
       appearance: none;
       &.genre-select {
-        width: 150px !important;
+        width: 140px !important;
       }
     }
   }
