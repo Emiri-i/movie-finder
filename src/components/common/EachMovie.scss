@@ -29,5 +29,9 @@
     width: 15vw;
     height: auto;
     border-radius: 8px;
+    transition: 0.5s;
+    &:hover {
+      opacity: 0.6;
+    }
   }
 }
