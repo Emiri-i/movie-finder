@@ -9,6 +9,7 @@
     margin-right: 8vh;
     img {
       width: 30vw;
+      max-width: 280px;
       height: auto;
       border-radius: 8px;
     }
@@ -87,13 +88,7 @@
             }
           }
         }
-        // .test {
-        //   &::after {
-        //     width: 0%;
-        //   }
-        // }
       }
-      // }
     }
   }
 }

@@ -1,0 +1,17 @@
+@mixin fadeAnimation($name, $fillmode: normal) {
+  animation: {
+    name: $name;
+    duration: 1s;
+    fill-mode: $fillmode;
+    timing-function: ease;
+    direction: normal;
+  }
+}
+
+@mixin carrousselAnimation($name, $fillmode: normal) {
+  animation: {
+    name: $name;
+    duration: 0.6s;
+    fill-mode: $fillmode;
+  }
+}

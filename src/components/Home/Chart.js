@@ -14,16 +14,17 @@ import {
 import "./Chart.scss";
 
 const Chart = () => {
+  const defaultGenre = { id: 999999999999, name: "All genre" }
   const mutualUrl1 = "include_adult=false&include_video=false&language=en-US&page=";
   const mutualUrl2 = "&region=fr&sort_by=popularity.desc&vote_count.gte=2000"
+  const chartDefaultYearRange = [new Date().getFullYear() - 4, new Date().getFullYear() - 1];
+
   const [genreList, setGenreList] = useState([]);
   const [chartMovieList, setChartMovieList] = useState([]);
   const [chartSelectedYearRange, setChartSelectedYearRange] = useState([new Date().getFullYear() - 4, new Date().getFullYear() - 1]);
   const [chartSelectedYearEndOptions, setChartSelectedYearEndOptions] = useState([]);
-
-  const allGenretext = "All genre"
-  let currentSelectedGenre = { id: 999999999999, name: allGenretext }
-  const chartDefaultYearRange = [new Date().getFullYear() - 4, new Date().getFullYear() - 1];
+  const [isChartDataLoading, setIsChartDataLoading] = useState(false);
+  const [currentSelectedGenre, setCurrentSelectedGenre] = useState(defaultGenre);
 
   const options = {
     method: 'GET',
@@ -40,25 +41,25 @@ const Chart = () => {
 
   useEffect(() => {
     getChartMovieList();
-  }, [chartSelectedYearRange])
+  }, [chartSelectedYearRange, currentSelectedGenre])
 
 
   const getGenres = async () => {
     const url = 'https://api.themoviedb.org/3/genre/movie/list?api_key=' + process.env.REACT_APP_MOVIE_FINDER_API_KEY + 'language=en'
     const data = await getFetchData(url, options);
-    console.log(data.genres)
-    setGenreList([{ id: 999999999, name: allGenretext }, ...data.genres]);
+    setGenreList([defaultGenre, ...data.genres]);
   }
 
   const getChartMovieList = async () => {
+    setIsChartDataLoading(true);
+
     let maxCount = 1;
     let targetYear = chartSelectedYearRange[0];
     let movieList = [];
-    const genreSortUrl = currentSelectedGenre.name === allGenretext ? "" : "&with_genres=" + currentSelectedGenre.id
-    console.log(targetYear)
-    console.log(chartSelectedYearRange[1])
+    const genreSortUrl = currentSelectedGenre.name === defaultGenre.name ? "" : "&with_genres=" + currentSelectedGenre.id
+
     for (let i = 0; targetYear <= chartSelectedYearRange[1]; i++) {
-      let testArr = [];
+      let targetArr = [];
       for (let i = 0; i < maxCount; i++) {
         const url = 'https://api.themoviedb.org/3/discover/movie?api_key='
           + process.env.REACT_APP_MOVIE_FINDER_API_KEY
@@ -67,20 +68,22 @@ const Chart = () => {
           + mutualUrl2
           + genreSortUrl
         const data = await getFetchData(url, options);
-        testArr.push(...data.results);
+        targetArr.push(...data.results);
         if (i === 0) {
           data.total_pages <= 1000 ? maxCount = data.total_pages : maxCount = 100;
         }
       }
-      movieList.push(testArr);
+      movieList.push(targetArr);
       targetYear++;
     }
+
     createChart(movieList);
   }
 
   const createChart = (movieList) => {
     let chartData = [];
-    let targetYear = chartSelectedYearRange[0]
+    let targetYear = chartSelectedYearRange[0];
+
     movieList.forEach((movie) => {
       if (movie.length) {
         const voteAverageList = movie.map((m) => m.vote_average);
@@ -102,13 +105,14 @@ const Chart = () => {
       }
       targetYear++;
     })
-    console.log(chartData)
+
     setChartMovieList(chartData);
+    setIsChartDataLoading(false);
   }
 
   const changeGenre = (e) => {
-    currentSelectedGenre = genreList.find((genre) => e.currentTarget.value === genre.name)
-    getChartMovieList();
+    const target = genreList.find((genre) => e.currentTarget.value === genre.name);
+    setCurrentSelectedGenre(target);
   }
 
   const renderYearStartSelect = () => {
@@ -177,35 +181,45 @@ const Chart = () => {
           </select>
         </div>
       </div>
-      <div className='chart-content'>
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            width={500}
-            height={400}
-            data={chartMovieList}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 20,
-              left: 20,
-            }}
-          >
-            <CartesianGrid stroke="#f5f5f5" />
-            <XAxis dataKey="year" scale="band" />
-            <YAxis yAxisId={1} label={{ value: "Nombre de films", angle: -90, dx: -20 }} />
-            <YAxis
-              yAxisId={2}
-              orientation="right"
-              domain={[0, 10]}
-              tickCount={6}
-              label={{ value: "Note moyenne", angle: -90, dx: 20 }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar yAxisId={1} dataKey="movieNumber" barSize={20} fill="#413ea0" name="Nombre de films" />
-            <Line yAxisId={2} type="monotone" dataKey="rating" stroke="#ff7300" name="Note moyenne" />
-          </ComposedChart>
-        </ResponsiveContainer>
+      {
+        isChartDataLoading &&
+        <div className='spinner-wrapper'>
+          <div className='spinner1'></div>
+          <div className='spinner2'></div>
+          <div className='spinner3'></div>
+        </div>
+      }
+      <div className={isChartDataLoading ? "unvisible" : "visible"}>
+        <div className='chart-content'>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart
+              width={500}
+              height={400}
+              data={chartMovieList}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
+              }}
+            >
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis dataKey="year" scale="band" />
+              <YAxis yAxisId={1} label={{ value: "Nombre de films", angle: -90, dx: -20 }} />
+              <YAxis
+                yAxisId={2}
+                orientation="right"
+                domain={[0, 10]}
+                tickCount={6}
+                label={{ value: "Note moyenne", angle: -90, dx: 20 }}
+              />
+              <Tooltip />
+              <Legend />
+              <Bar yAxisId={1} dataKey="movieNumber" barSize={20} fill="#413ea0" name="Nombre de films" />
+              <Line yAxisId={2} type="monotone" dataKey="rating" stroke="#ff7300" name="Note moyenne" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </section>
   )

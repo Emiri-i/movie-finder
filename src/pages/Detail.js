@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { formatNumber } from '../global/util';
-import "./Detail.scss";
+import "./css/Detail.scss";
 import { getFetchData } from '../global/util';
 
 const Detail = () => {
@@ -13,6 +13,7 @@ const Detail = () => {
     { label: "Revenue", value: formatNumber(state.movieData.revenue) + "$", className: "" },
     { label: "Recettes", value: formatNumber(state.movieData.profit) + "$", className: state.movieData.profit < 0 ? "red" : "green" },
   ]
+
   useEffect(() => {
     setPublicRate(Math.floor(state.movieData.vote_average));
     getMyRate();

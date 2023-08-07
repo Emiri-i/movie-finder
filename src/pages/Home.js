@@ -3,30 +3,30 @@ import leftArrow from "../assets/left-arrow.png"
 import rightArrow from "../assets/right-arrow.png"
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setPopularFilmActions } from '../store/index';
-import "./Home.scss";
-import EachMovie from '../components/EachMovie';
+import { setPopularMovieActions } from '../store/index';
+import "./css/Home.scss";
+import EachMovie from '../components/common/EachMovie';
 import Chart from '../components/Home/Chart';
 import { getFetchData } from '../global/util';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const popularFilmList = useSelector(state => state.popularFilmList)
+  const popularMovieList = useSelector(state => state.popularMovieList)
 
-  const [shownPopularFilmList, setShownPopularFilmList] = useState([]);
-  const [filmNumberList, setFilmNumberList] = useState([0, 4]);
+  const [shownPopularMovieList, setShownPopularMovieList] = useState([]);
+  const [movieNumberList, setMovieNumberList] = useState([0, 4]);
+  const [isMovieListLoading, setIsMovieListLoading] = useState(false);
 
-
-  const getPopularFilmData = async () => {
+  const getPopularMovieData = async () => {
+    setIsMovieListLoading(true);
     const url = "https://api.themoviedb.org/3/movie/popular?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY + "&language=en-US&page=1"
     const data = await getFetchData(url);
-    // console.log(data)
     const updatedData = [];
 
     for (const d of data.results) {
-      const detailDataUrl = "https://api.themoviedb.org/3/movie/" + d.id + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY;
+      const detailDataUrl = "https://api.themoviedb.org/3/movie/" + d.id
+        + "?api_key=" + process.env.REACT_APP_MOVIE_FINDER_API_KEY;
       const movieDetailData = await getFetchData(detailDataUrl);
-      // console.log(filmDetailData)
       updatedData.push({
         ...d, poster_path: "https://image.tmdb.org/t/p/original/" + d.poster_path,
         vote_average: movieDetailData.vote_average, revenue: movieDetailData.revenue,
@@ -34,41 +34,72 @@ const Home = () => {
       })
     }
 
-    // console.log(updatedData)
-    dispatch(setPopularFilmActions.setPopularFilmList(updatedData));
-    setShownPopularFilmList(updatedData.slice(0, 4));
-
+    dispatch(setPopularMovieActions.setPopularMovieList(updatedData));
+    setShownPopularMovieList(updatedData.slice(0, 4));
+    setIsMovieListLoading(false);
   }
 
-  const changeShownFilm = (num) => {
-    setFilmNumberList([filmNumberList[0] + num, filmNumberList[1] + num])
+  const changeShownMovie = (num) => {
+    addClickEvent();
+    setMovieNumberList([movieNumberList[0] + num, movieNumberList[1] + num])
   }
-
-  useEffect(() => { getPopularFilmData() }, []);
 
   useEffect(() => {
-    setShownPopularFilmList(popularFilmList.slice(filmNumberList[0], filmNumberList[1]))
-  }, [filmNumberList])
+    getPopularMovieData();
+    addClickEvent();
+  }, []);
+
+  const addClickEvent = () => {
+    const movieCarrousselElem = document.querySelector('.movie-ranking-details');
+    const buttonLeft = document.querySelector(".carroussel-button-left");
+    const buttonRight = document.querySelector(".carroussel-button-right");
+    const buttonElemArray = [
+      { elem: buttonLeft, className: "-left" },
+      { elem: buttonRight, className: "-right" }
+    ]
+    buttonElemArray.forEach((button) => {
+      button.elem.addEventListener("click", () => {
+        movieCarrousselElem.classList.add("active" + button.className);
+      })
+      setTimeout(() => {
+        movieCarrousselElem.classList.remove("active" + button.className);
+      }, 500)
+    })
+  }
+
+  useEffect(() => {
+    setShownPopularMovieList(popularMovieList.slice(movieNumberList[0], movieNumberList[1]))
+  }, [movieNumberList]);
 
   return (
     <>
       <main className='home-content'>
         <section>
-          <div className='film-ranking-title'>Les 10 films les plus populaires du moment</div>
-          <div className='film-ranking-content'>
-            <button onClick={() => changeShownFilm(-1)} className={filmNumberList[0] === 0 ? "unvisible" : ""}>
-              <img src={leftArrow} alt="left arrow" />
-            </button>
-            <div className='film-ranking-details'>
-              {shownPopularFilmList.map((film) => (
-                < EachMovie film={film} key={film.id} />
-              ))}
+          {
+            isMovieListLoading &&
+            <div className='spinner-wrapper'>
+              <div className='spinner1'></div>
+              <div className='spinner2'></div>
+              <div className='spinner3'></div>
             </div>
-            <button onClick={() => changeShownFilm(1)} className={filmNumberList[1] === 9 ? "unvisible" : ""}>
-              <img src={rightArrow} alt="right arrow" />
-            </button>
+          }
+          <div className={isMovieListLoading ? "unvisible" : "visible"}>
+            <h1 className='movie-ranking-title'>Les 10 films les plus populaires du moment</h1>
+            <div className="movie-ranking-content">
+              <button onClick={() => changeShownMovie(-1)} className={`carroussel-button-left ${movieNumberList[0] === 0 ? "button-unvisible" : ""}`}>
+                <img src={leftArrow} alt="left arrow" />
+              </button>
+              <div className='movie-ranking-details'>
+                {shownPopularMovieList.map((movie) => (
+                  < EachMovie movie={movie} key={movie.id} />
+                ))}
+              </div>
+              <button onClick={() => changeShownMovie(1)} className={`carroussel-button-right ${movieNumberList[1] === 9 ? "button-unvisible" : ""}`}>
+                <img src={rightArrow} alt="right arrow" />
+              </button>
+            </div>
+            <Link to="/search" className='movie-ranking-link'>Voir tous les films</Link>
           </div>
-          <Link to="/search" className='film-ranking-link'>Voir tous les films</Link>
         </section>
         <Chart />
       </main>

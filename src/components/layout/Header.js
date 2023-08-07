@@ -13,13 +13,15 @@ const Header = () => {
             <div className='header-link'>
               <NavLink to="/" className={({ isActive }) =>
                 isActive ? "active" : undefined}
-                end >ACCUEIL
+                end >
+                ACCUEIL
               </NavLink>
             </div>
             <div className='header-division'>|</div>
             <div className='header-link'>
               <NavLink to="/search" className={({ isActive }) =>
-                isActive ? "active" : undefined}>RECHERCHE
+                isActive ? "active" : undefined}>
+                RECHERCHE
               </NavLink>
             </div>
           </div>

@@ -1,0 +1,54 @@
+@use "./global/mixin";
+
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  div {
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    animation: bounce 1s infinite;
+  }
+  .spinner1 {
+    animation-delay: -0.3s;
+    margin-right: 4px;
+  }
+  .spinner2 {
+    animation-delay: -0.15s;
+    margin-right: 4px;
+  }
+}
+
+.unvisible {
+  opacity: 0;
+}
+.visible {
+  @include mixin.fadeAnimation($name: fadeInAnime, $fillmode: forwards);
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes fadeInAnime {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

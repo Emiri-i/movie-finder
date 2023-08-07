@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import Search from './pages/Search';
@@ -17,10 +17,6 @@ const router = createBrowserRouter([
       { path: "*", element: <Error /> },
     ]
   },
-  // { path: "/", element: <Home /> },
-  // { path: "/search", element: <Search /> },
-  // { path: "/detail", element: <Detail /> },
-  // { path: "*", element: <Error /> },
 ]);
 
 function App() {

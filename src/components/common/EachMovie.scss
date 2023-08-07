@@ -1,11 +1,11 @@
-.each-film {
+.each-movie {
   margin: 15px;
   text-align: center;
   width: 15vw;
-  .each-film-title-wrapper {
+  .each-movie-title-wrapper {
     display: flex;
     justify-content: space-between;
-    .film-title {
+    .movie-title {
       padding-right: 4px;
       width: 70%;
       text-align: start;
@@ -20,7 +20,7 @@
       color: green;
     }
   }
-  .film-release-date {
+  .movie-release-date {
     margin-top: 6px;
     text-align: start;
   }
