@@ -10,15 +10,12 @@ export const getYear = (dt) => {
   return dt.substr(0, dt.indexOf("-"));
 }
 
-export const getFetchData = (url, options) => {
-  return new Promise(async (resolve) => {
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      resolve(data);
-    } catch (e) {
-      alert(e);
-      console.error(e);
-    }
-  })
+export const getFetchData = async (url, options) => {
+  try {
+    const response = await fetch(url, options);
+    return await response.json();
+  } catch (e) {
+    alert(e);
+    console.error(e);
+  }
 }
